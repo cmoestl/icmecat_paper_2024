@@ -2,7 +2,7 @@
 
 Code for producing the results and figures for the Möstl et al. 2024 ICMECAT paper.
 
-Everything is produced with the notebook moestl_2024_icmecat.ipynb, see instructions on top in this file.
+Everything is produced with the notebook moestl_2024_icmecat.ipynb, see instructions on top of this file.
 
 
 ## Installation

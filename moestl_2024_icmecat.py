@@ -16,7 +16,7 @@
 # TBD:
 # 
 # - power laws for solar min vs max
-# - power laws for each B component, check differences
+# - power laws for each B component, make plots, check < 0 behavior
 # 
 # 
 # #### papers to check:
@@ -37,7 +37,7 @@
 # 
 # 
 
-# In[1]:
+# In[33]:
 
 
 import pickle 
@@ -78,7 +78,7 @@ os.system('jupyter nbconvert --to script moestl_2024_icmecat.ipynb')
 
 # ## load data
 
-# In[5]:
+# In[34]:
 
 
 #load icmecat as pandas dataframe
@@ -118,7 +118,7 @@ print('done')
 
 # ### Figure (1) for ICMECAT times and distance
 
-# In[16]:
+# In[50]:
 
 
 sns.set_context("talk")     
@@ -128,7 +128,7 @@ fig=plt.figure(3,figsize=(13,7),dpi=200)
 
 ax1=plt.subplot(111)
 
-ms=6
+ms=5
 al=0.8
 
 
@@ -160,19 +160,36 @@ ax1.xaxis.set_major_formatter(myformat)
 ax1.set_xlim([datetime.datetime(1990,1,1),datetime.datetime(2025,1,1)])
 
 
-ax1.legend(loc=1,fontsize=12)
+ax1.legend(loc=1,fontsize=14)
 
 ax1.set_yticks(np.arange(0,6,0.5))
 ax1.set_ylim([0,5.5])
 
 plt.tight_layout()
-plt.savefig('results/fig3_icmecat_obs.png', dpi=150,bbox_inches='tight')
-plt.savefig('results/fig3_icmecat_obs.pdf', dpi=150,bbox_inches='tight')
+plt.savefig('results/fig1_icmecat_obs.png', dpi=150,bbox_inches='tight')
+plt.savefig('results/fig1_icmecat_obs.pdf', dpi=150,bbox_inches='tight')
+
+
+print('earliest and latest time')
+
+print(np.min(ic.icme_start_time))
+print(np.max(ic.icme_start_time))
+
+print('How many events')
+print(np.size(ic.icmecat_id))
+
+print('events from us, MOESTL or WEILER, look up from catalog online')
+print('527')
+
+print('percentage')
+print(527/np.size(ic.icmecat_id)*100)
+
+
 
 
 # ### Figure (2) Solar Orbiter example event April 2023
 
-# In[17]:
+# In[51]:
 
 
 sns.set_style('whitegrid')
@@ -278,23 +295,21 @@ ax4.annotate('SWA/PAS',xy=(0.9,0.88),xycoords='axes fraction',fontsize=11,ha='ce
 ax4.xaxis.set_minor_locator(mdates.HourLocator(interval=1))
 ax4.tick_params(which="both", bottom=True)
 ax4.xaxis.set_major_locator(mdates.HourLocator(interval=4))
-
-
 ax4.set_xlabel('Year 2023')
 
 plt.tight_layout()
-#plt.show()
 
 plotfile='results/fig2_solo_example.png'
 plt.savefig(plotfile)
 plotfile='results/fig2_solo_example.pdf'
 plt.savefig(plotfile)
+
 print('saved as ',plotfile)
 
 
 # ### Figure (3) PSP magnetic fields close-to-Sun observations
 
-# In[18]:
+# In[52]:
 
 
 sns.set_style('whitegrid')
@@ -514,10 +529,10 @@ plt.annotate('(e)',xy=(0.02,0.33),xycoords='figure fraction',fontsize=13,ha='cen
 plt.annotate('(f)',xy=(0.52,0.33),xycoords='figure fraction',fontsize=13,ha='center')
 
 
-plotfile='results/fig2_psp_close.png'
+plotfile='results/fig3_psp_close.png'
 plt.savefig(plotfile)
 
-plotfile='results/fig2_psp_close.pdf'
+plotfile='results/fig3_psp_close.pdf'
 plt.savefig(plotfile)
 
 print('saved as ',plotfile)
@@ -525,7 +540,7 @@ print('saved as ',plotfile)
 
 # ### B(r) curve fits in magnetic obstacle
 
-# In[19]:
+# In[56]:
 
 
 print('B(r) for MO_Bmean')
@@ -648,7 +663,10 @@ print()
 
 print('---------------------')
 
-print('component fits')
+print('component fits, check what happens < 0')
+
+
+print('Bz')
 
 r=ic.mo_sc_heliodistance
 bz=ic.mo_bzmean
@@ -672,6 +690,8 @@ print()
 ##remove events where one or both are nan
 
 
+print('By')
+
 r=ic.mo_sc_heliodistance
 by=ic.mo_bymean
 
@@ -691,9 +711,35 @@ print()
 print()
 
 
+
+print('Bx')
+
+r=ic.mo_sc_heliodistance
+bx=ic.mo_bymean
+
+rem=np.where(np.logical_or(np.isnan(r), np.isnan(bx)))[0]
+r=r.drop(rem)
+bx=bx.drop(rem)
+
+fitbx_lm=scipy.optimize.curve_fit(powerlaw, r,np.abs(bx),method='lm',full_output=True)
+
+parambx=fitbx_lm[0]
+pcovbx=fitbx_lm[1]
+perrbx = np.sqrt(np.diag(pcovbx))
+print('LM results in detail')
+print('Parameters a and b, y = a x^b:',np.round(parambx,2))
+print('3 standard deviation on a and b', 3*np.round(perrbx,2))
+print()
+print()
+
+
+
+################ plot components
+
+
 # ### Figure (4) B(r) power laws
 
-# In[21]:
+# In[54]:
 
 
 sns.set_context("talk")     
@@ -753,7 +799,7 @@ plt.savefig('results/fig4_br_mo.pdf', dpi=150,bbox_inches='tight')
 
 # ### Figure (5) connecting to solar observations
 
-# In[23]:
+# In[40]:
 
 
 sns.set_context("talk")     
@@ -997,7 +1043,7 @@ plt.savefig('results/fig5_br_mo_zoom.pdf', dpi=150,bbox_inches='tight')
 
 # #### same with zoom in on close-in solar distances, for trying out power laws
 
-# In[25]:
+# In[41]:
 
 
 sns.set_context("talk")     
@@ -1197,7 +1243,7 @@ plt.savefig('results/fig5_br_mo_zoom_close.png', dpi=150,bbox_inches='tight')
 
 # #### B(r) curve fits in full ICME
 
-# In[26]:
+# In[57]:
 
 
 print('B(r) for ICME Bmean')
@@ -1289,7 +1335,7 @@ ax.plot(fitx,powerlaw(fitx,param4[0],param4[1]),'-b')
 # 
 # 
 
-# In[ ]:
+# In[43]:
 
 
 print('D(r)')
