@@ -15,10 +15,9 @@
 # 
 # TBD:
 # 
+# 
 # - power laws for solar min vs max
-# - power laws for each B component, make plots, check < 0 behavior
-# 
-# 
+# - power laws for each B component, check differences
 # #### papers to check:
 # 
 # decay index profiles for ARs, but only in AR, too close
@@ -37,7 +36,7 @@
 # 
 # 
 
-# In[33]:
+# In[1]:
 
 
 import pickle 
@@ -78,7 +77,7 @@ os.system('jupyter nbconvert --to script moestl_2024_icmecat.ipynb')
 
 # ## load data
 
-# In[34]:
+# In[2]:
 
 
 #load icmecat as pandas dataframe
@@ -118,7 +117,7 @@ print('done')
 
 # ### Figure (1) for ICMECAT times and distance
 
-# In[50]:
+# In[3]:
 
 
 sns.set_context("talk")     
@@ -189,7 +188,7 @@ print(527/np.size(ic.icmecat_id)*100)
 
 # ### Figure (2) Solar Orbiter example event April 2023
 
-# In[51]:
+# In[4]:
 
 
 sns.set_style('whitegrid')
@@ -309,7 +308,7 @@ print('saved as ',plotfile)
 
 # ### Figure (3) PSP magnetic fields close-to-Sun observations
 
-# In[52]:
+# In[5]:
 
 
 sns.set_style('whitegrid')
@@ -540,7 +539,7 @@ print('saved as ',plotfile)
 
 # ### B(r) curve fits in magnetic obstacle
 
-# In[56]:
+# In[6]:
 
 
 print('B(r) for MO_Bmean')
@@ -739,7 +738,7 @@ print()
 
 # ### Figure (4) B(r) power laws
 
-# In[54]:
+# In[7]:
 
 
 sns.set_context("talk")     
@@ -799,7 +798,7 @@ plt.savefig('results/fig4_br_mo.pdf', dpi=150,bbox_inches='tight')
 
 # ### Figure (5) connecting to solar observations
 
-# In[40]:
+# In[8]:
 
 
 sns.set_context("talk")     
@@ -1043,7 +1042,7 @@ plt.savefig('results/fig5_br_mo_zoom.pdf', dpi=150,bbox_inches='tight')
 
 # #### same with zoom in on close-in solar distances, for trying out power laws
 
-# In[41]:
+# In[9]:
 
 
 sns.set_context("talk")     
@@ -1241,9 +1240,23 @@ plt.tight_layout()
 plt.savefig('results/fig5_br_mo_zoom_close.png', dpi=150,bbox_inches='tight')
 
 
+# ## Additional experiments
+
+# ## solar cycle dependence
+# 
+
+# In[10]:
+
+
+#####TBD 
+
+#We now look at the solar cycle variation from minimum to maximum as we have inner heliospheric observations available from the complete solar cycle 24 (SC24) and already half of solar cycle 25 (SC25). We split the analysis in to 4 intervals: minimum before SC24, maximum of SC24, minimum before SC25, and the current maximum of SC25.
+
+
+
 # #### B(r) curve fits in full ICME
 
-# In[57]:
+# In[11]:
 
 
 print('B(r) for ICME Bmean')
@@ -1335,7 +1348,7 @@ ax.plot(fitx,powerlaw(fitx,param4[0],param4[1]),'-b')
 # 
 # 
 
-# In[43]:
+# In[12]:
 
 
 print('D(r)')
@@ -1427,10 +1440,31 @@ ax.plot(fitx,powerlaw(fitx,param[0]+3*perr[0],fit_lm[0][1])+3*perr[0],'--b',alph
 
 
 
-# In[ ]:
+# ### some general statistics
+
+# In[14]:
 
 
+ic.keys()
+print(np.nanmean(ic.sheath_speed_mean[iwin]))
+print(np.nanmean(ic.sheath_speed_std[iwin]))
+print(np.nanmax(ic.sheath_speed_mean[iwin]))
+print(np.nanmin(ic.sheath_speed_mean[iwin]))
+sns.displot(ic.sheath_speed_mean)
 
+au=const.au.value*1e-3
+
+#lead time for every 0.01 au with mean sheath speed
+print(au/466/60/100)
+
+#lead time for every 0.01 au with mean sheath speed
+
+print(au/500/60/100)
+
+print(au/800/60/100)
+
+
+print(au/2000/60/100)
 
 
 # In[ ]:
