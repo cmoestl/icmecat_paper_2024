@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## Results for Möstl et al. (2024) ICMECAT paper
+# ## Results for Möstl et al. (2025) ICMECAT paper
 # 
 # 
-# script to produce paper results for the ICMECAT paper Möstl et al. 2024, ApJL
+# script to produce paper results for the ICMECAT paper Möstl et al. 2025, ApJL
 # 
 # - uses environment helio5, see /envs/env_helio5.yml in the heliocats package
 # 
-# - uses ICMECAT version 2.2., release 2024 April 11, version 21 on figshare https://doi.org/10.6084/m9.figshare.6356420.v21
+# - uses ICMECAT version 2.2., release 2025 February TBD, version ** on figshare https://doi.org/10.6084/m9.figshare.6356420.v21
 # 
 # - additionally reads in Solar Orbiter and Parker Solar Probe data from data files, available in the figshare repository: https://doi.org/10.6084/m9.figshare.11973693.v25
 # 
@@ -1442,7 +1442,7 @@ ax.plot(fitx,powerlaw(fitx,param[0]+3*perr[0],fit_lm[0][1])+3*perr[0],'--b',alph
 
 # ### some general statistics
 
-# In[14]:
+# In[13]:
 
 
 ic.keys()
@@ -1465,6 +1465,24 @@ print(au/800/60/100)
 
 
 print(au/2000/60/100)
+
+
+# In[14]:
+
+
+ic.keys()
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:

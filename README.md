@@ -4,6 +4,7 @@ Code for producing the results and figures for the Möstl et al. 2024 ICMECAT pa
 
 Everything is produced with the notebook moestl_2024_icmecat.ipynb, see instructions on top of this file.
 
+Environment is helio5, see /envs.
 
 ## Installation
 
